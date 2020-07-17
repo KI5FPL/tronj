@@ -1,0 +1,4 @@
+
+description 'Minimal set of web3j utility classes'
+
+dependencies { implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion" }
