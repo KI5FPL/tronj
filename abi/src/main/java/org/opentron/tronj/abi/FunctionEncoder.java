@@ -89,7 +89,7 @@ public abstract class FunctionEncoder {
     protected static String buildMethodId(final String methodSignature) {
         final byte[] input = methodSignature.getBytes();
         final byte[] hash = Hash.sha3(input);
-        return Numeric.toHexString(hash).substring(0, 10);
+        return Numeric.toHexString(hash).substring(2, 10);
     }
 
     private static FunctionEncoder encoder() {

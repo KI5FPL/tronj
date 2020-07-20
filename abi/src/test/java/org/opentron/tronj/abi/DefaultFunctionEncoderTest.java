@@ -29,7 +29,7 @@ public class DefaultFunctionEncoderTest {
 
     @Test
     public void testBuildMethodId() {
-        assertEquals("0xcdcd77c0", DefaultFunctionEncoder.buildMethodId("baz(uint32,bool)"));
+        assertEquals("cdcd77c0", DefaultFunctionEncoder.buildMethodId("baz(uint32,bool)"));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DefaultFunctionEncoderTest {
                         Collections.emptyList());
 
         assertEquals(
-                "0xcdcd77c0"
+                "cdcd77c0"
                         + "0000000000000000000000000000000000000000000000000000000000000045"
                         + "0000000000000000000000000000000000000000000000000000000000000001",
                 FunctionEncoder.encode(function));
@@ -95,6 +95,7 @@ public class DefaultFunctionEncoderTest {
                         Arrays.asList(
                                 new DynamicBytes("dave".getBytes()),
                                 new Bool(true),
+                                new Address("T9yKC9LCoVvmhaFxKcdK9iL18TUWtyFtjh"),
                                 new DynamicArray<>(
                                         new Uint(BigInteger.ONE),
                                         new Uint(BigInteger.valueOf(2)),
@@ -102,10 +103,11 @@ public class DefaultFunctionEncoderTest {
                         Collections.emptyList());
 
         assertEquals(
-                "0xa5643bf2"
-                        + "0000000000000000000000000000000000000000000000000000000000000060"
+                "465c405b"
+                        + "0000000000000000000000000000000000000000000000000000000000000080"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
-                        + "00000000000000000000000000000000000000000000000000000000000000a0"
+                        + "00000000000000000000000000052b08330e05d731e38c856c1043288f7d9744"
+                        + "00000000000000000000000000000000000000000000000000000000000000c0"
                         + "0000000000000000000000000000000000000000000000000000000000000004"
                         + "6461766500000000000000000000000000000000000000000000000000000000"
                         + "0000000000000000000000000000000000000000000000000000000000000003"
@@ -130,7 +132,7 @@ public class DefaultFunctionEncoderTest {
                         Collections.emptyList());
 
         assertEquals(
-                "0x8be65246"
+                "8be65246"
                         + "0000000000000000000000000000000000000000000000000000000000000123"
                         + "0000000000000000000000000000000000000000000000000000000000000080"
                         + "3132333435363738393000000000000000000000000000000000000000000000"
@@ -146,7 +148,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testStaticStructEncode() {
         assertEquals(
-                "0x3d761de6"
+                "3d761de6"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
                         + "000000000000000000000000000000000000000000000000000000000000000a",
                 FunctionEncoder.encode(AbiV2TestFixture.setBarFunction));
@@ -155,7 +157,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructEncode() {
         assertEquals(
-                "0x2cf07395"
+                "2cf07395"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
                         + "0000000000000000000000000000000000000000000000000000000000000080"
@@ -169,7 +171,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructWithStaticFieldEncode() {
         assertEquals(
-                "0x9096c213"
+                "9096c213"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
@@ -181,7 +183,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructWithStaticFieldEncode2() {
         assertEquals(
-                "0xbe9c5e34"
+                "be9c5e34"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
@@ -193,7 +195,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testStaticStructNestedEncode() {
         assertEquals(
-                "0xad204a12"
+                "ad204a12"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
                         + "000000000000000000000000000000000000000000000000000000000000000a"
                         + "0000000000000000000000000000000000000000000000000000000000000001",
@@ -203,7 +205,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructNestedEncode() {
         assertEquals(
-                "0x8c9fb6f9"
+                "8c9fb6f9"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
@@ -218,7 +220,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructNestedEncode2() {
         assertEquals(
-                "0x6bb632a9"
+                "6bb632a9"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
@@ -236,7 +238,7 @@ public class DefaultFunctionEncoderTest {
     @Test
     public void testDynamicStructNestedEncode3() {
         assertEquals(
-                "0xc036933d"
+                "c036933d"
                         + "0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000040"
                         + "0000000000000000000000000000000000000000000000000000000000000100"

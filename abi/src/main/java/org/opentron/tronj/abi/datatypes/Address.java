@@ -13,14 +13,14 @@
 package org.opentron.tronj.abi.datatypes;
 
 import java.math.BigInteger;
-
+import java.util.Arrays;
+import org.opentron.tronj.utils.Base58Check;
 import org.opentron.tronj.utils.Numeric;
 
 /**
  * Address type, which by default is equivalent to uint160 which follows the Ethereum specification.
  */
 public class Address implements Type<String> {
-
     public static final String TYPE_NAME = "address";
     public static final int DEFAULT_LENGTH = 160;
     public static final Address DEFAULT = new Address(BigInteger.ZERO);
@@ -39,8 +39,16 @@ public class Address implements Type<String> {
         this(new Uint(bitSize, value));
     }
 
-    public Address(String hexValue) {
-        this(DEFAULT_LENGTH, hexValue);
+    public Address(String value) {
+        if (value.startsWith("T")) {
+            byte[] rawValue = Base58Check.base58ToBytes(value);
+            this.value = new Uint(DEFAULT_LENGTH, Numeric.toBigInt(Arrays.copyOfRange(rawValue, 1, 21)));
+        } else if (value.startsWith("41")) {
+            this.value = new Uint(DEFAULT_LENGTH, Numeric.toBigInt(value.substring(2)));
+        } else {
+            // ETH compatible
+            this.value = new Uint(DEFAULT_LENGTH, Numeric.toBigInt(value));
+        }
     }
 
     public Address(int bitSize, String hexValue) {
@@ -58,7 +66,9 @@ public class Address implements Type<String> {
 
     @Override
     public String toString() {
-        return Numeric.toHexStringWithPrefixZeroPadded(value.getValue(), value.getBitSize() >> 2);
+        byte[] rawAddr = Numeric.toBytesPadded(value.getValue(), 21);
+        rawAddr[0] = 0x41;
+        return Base58Check.bytesToBase58(rawAddr);
     }
 
     @Override
