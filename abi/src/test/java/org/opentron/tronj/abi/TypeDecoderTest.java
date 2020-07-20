@@ -1018,6 +1018,11 @@ public class TypeDecoderTest {
                 (new Address("0xbe5422d15f39373eb0a97ff8c10fbd0e40e29338")));
 
         assertEquals(
+                TypeDecoder.instantiateType(
+                        "address", "4152b08330e05d731e38c856c1043288f7d9744"),
+                (new Address("T9yKC9LCoVvmhaFxKcdK9iL18TUWtyFtjh")));
+
+        assertEquals(
                 TypeDecoder.instantiateType("address", BigInteger.ONE),
                 (new Address("0x0000000000000000000000000000000000000001")));
     }
