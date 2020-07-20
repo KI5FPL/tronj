@@ -26,6 +26,7 @@ import org.opentron.tronj.abi.datatypes.StaticArray;
 import org.opentron.tronj.abi.datatypes.Type;
 import org.opentron.tronj.abi.datatypes.Uint;
 import org.opentron.tronj.abi.datatypes.Utf8String;
+import org.opentron.tronj.abi.datatypes.TrcToken;
 import org.opentron.tronj.abi.datatypes.generated.Bytes1;
 import org.opentron.tronj.abi.datatypes.generated.Bytes4;
 import org.opentron.tronj.abi.datatypes.generated.Bytes6;
@@ -1025,6 +1026,14 @@ public class TypeDecoderTest {
         assertEquals(
                 TypeDecoder.instantiateType("address", BigInteger.ONE),
                 (new Address("0x0000000000000000000000000000000000000001")));
+    }
+
+    @Test
+    public void testTrcToken() throws Exception {
+        assertEquals(
+                TypeDecoder.instantiateType(
+                        "trcToken", "00000000000000000000000000000000000000000000000000000000000f4e0c"),
+                (new TrcToken(1003020)));
     }
 
     @Test
