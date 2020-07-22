@@ -3,14 +3,15 @@
  */
 package demo;
 
-import java.math.BigInteger;
-import java.util.*;
-
 import com.github.ki5fpl.tronj.abi.FunctionEncoder;
+import com.github.ki5fpl.tronj.abi.FunctionReturnDecoder;
+import com.github.ki5fpl.tronj.abi.TypeReference;
 import com.github.ki5fpl.tronj.abi.datatypes.*;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Bytes10;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint256;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint32;
+import java.math.BigInteger;
+import java.util.*;
 
 public class App {
     public String encodeFunctionCalling() {
@@ -21,13 +22,37 @@ public class App {
                 new Bool(true),
                 new Address("T9yKC9LCoVvmhaFxKcdK9iL18TUWtyFtjh"),
                 new DynamicArray<>(
-                    new Uint(BigInteger.ONE), new Uint(BigInteger.valueOf(2)), new Uint(BigInteger.valueOf(3)))),
+                    new Uint(BigInteger.ONE),
+                    new Uint(BigInteger.valueOf(2)),
+                    new Uint(BigInteger.valueOf(3))
+                )
+            ),
             Collections.emptyList());
         String encodedHex = FunctionEncoder.encode(function);
         return encodedHex;
     }
 
+    public void decodeFunctionReturn() {
+        Function function = new Function("test", Collections.<Type>emptyList(),
+            Arrays.asList(new TypeReference<Uint>() {}, new TypeReference<Address>() {}));
+
+        List<Type> outputs = FunctionReturnDecoder.decode(
+            "0x0000000000000000000000000000000000000000000000000000000000000037"
+            + "00000000000000000000000028263f17875e4f277a72f6c6910bb7a692108b3e",
+                         function.getOutputParameters());
+        for (Type obj : outputs) {
+            System.out.println(obj.getTypeAsString() + "  " + obj.toString());
+            if (Uint.class.isInstance(obj)) {
+                System.out.println("  parsed value => " + ((Uint)obj).getValue());
+            }
+        }
+        //assertEquals(outputs,
+        //    (Arrays.asList(new Uint(BigInteger.valueOf(55)), new Uint(BigInteger.valueOf(7)))));
+    }
+
     public static void main(String[] args) {
         System.out.println(new App().encodeFunctionCalling());
+
+        new App().decodeFunctionReturn();
     }
 }
