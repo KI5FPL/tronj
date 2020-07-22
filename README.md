@@ -4,6 +4,8 @@ The TRON client library.
 
 ## How to use
 
+Refer `demo` project.
+
 ```java
 /*
 import java.math.BigInteger;
