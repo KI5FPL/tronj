@@ -37,7 +37,7 @@ public class App {
             Arrays.asList(new TypeReference<Uint>() {}, new TypeReference<Address>() {}));
 
         List<Type> outputs = FunctionReturnDecoder.decode(
-            "0x0000000000000000000000000000000000000000000000000000000000000037"
+            "0000000000000000000000000000000000000000000000000000000000000037"
             + "00000000000000000000000028263f17875e4f277a72f6c6910bb7a692108b3e",
                          function.getOutputParameters());
         for (Type obj : outputs) {
