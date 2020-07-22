@@ -1,6 +1,61 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.8.5'
+}
 
 description 'Ethereum Application Binary Interface (ABI) for working with smart contracts'
 
 dependencies {
     implementation project(':utils')
+}
+
+/*
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId 'com.github.ki5fpl.tronj'
+            artifactId 'abi'
+            version '0.0.1'
+        }
+    }
+}
+*/
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    configurations = ['archives']
+
+    pkg {
+        repo = 'tronj'
+        name = 'abi'
+        // configurations = ['archives']
+        desc = 'An Tron library.'
+        websiteUrl = 'https://github.com/ki5fpl/tronj'
+        vcsUrl = 'https://github.com/ki5fpl/tronj.git'
+        licenses = ['Apache-2.0']
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            afterEvaluate {
+                name = "${project.version}"
+                released = new Date()
+            }
+        }
+    }
+}
+
+tasks.create('buildLib', Jar) {
+    baseName = 'tronj'
+    version = null
+    from(sourceSets.main.output) {
+        include '/**'
+    }
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }

@@ -4,26 +4,25 @@ plugins {
 
 ext {
     bouncycastleVersion = '1.66'
+    junitJupiterVersion = '5.4.2'
 }
 
 allprojects {
+    version '0.0.4'
+    group = 'com.github.ki5fpl.tronj'
+
     repositories {
         jcenter()
     }
 }
 
 subprojects {
-    version = '1.0'
     apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 
     dependencies {
-        // This dependency is exported to consumers, that is to say found on their compile classpath.
-        // api 'org.apache.commons:commons-math3:3.6.1'
-
-        // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-        // implementation 'com.google.guava:guava:29.0-jre'
-
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+        testImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     }
 
     test {
@@ -31,5 +30,20 @@ subprojects {
         testLogging {
             events 'passed', 'skipped', 'failed'
         }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives jar
+        archives sourcesJar
     }
 }

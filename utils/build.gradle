@@ -1,4 +1,32 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.8.5'
+}
 
 description 'Minimal set of web3j utility classes'
 
 dependencies { implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion" }
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    configurations = ['archives']
+
+    pkg {
+        repo = 'tronj'
+        name = 'utils'
+        // configurations = ['archives']
+        desc = 'An Tron library.'
+        websiteUrl = 'https://github.com/ki5fpl/tronj'
+        vcsUrl = 'https://github.com/ki5fpl/tronj.git'
+        licenses = ['Apache-2.0']
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            afterEvaluate {
+                name = "${project.version}"
+                released = new Date()
+            }
+        }
+    }
+}

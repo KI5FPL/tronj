@@ -1,4 +1,4 @@
-rootProject.name = 'org.opentron.tronj'
+rootProject.name = 'tronj'
 
 include 'utils'
 include 'abi'
