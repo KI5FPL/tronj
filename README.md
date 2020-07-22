@@ -4,6 +4,45 @@ The TRON client library.
 
 ## How to use
 
+### Gradle Setting
+
+Add repo setting:
+
+```groovy
+repositories {
+    maven {
+        url  "https://dl.bintray.com/ki5fpl/tronj"
+    }
+}
+```
+
+Then add `abi` as dependency.
+
+```groovy
+dependencies {
+    ....
+
+    implementation 'com.github.ki5fpl.tronj:abi:0.1.0'
+
+    ....
+}
+```
+
+### Maven Settings
+
+Use maven repo setting from [Bintray](https://bintray.com/repo/downloadMavenRepoSettingsFile/downloadSettings?repoPath=%2Fki5fpl%2Ftronj).
+
+```xml
+<dependency>
+  <groupId>com.github.ki5fpl.tronj</groupId>
+  <artifactId>abi</artifactId>
+  <version>0.1.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+### Demo Code
+
 Refer `demo` project.
 
 ```java
