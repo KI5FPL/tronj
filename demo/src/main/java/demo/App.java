@@ -50,9 +50,24 @@ public class App {
         //    (Arrays.asList(new Uint(BigInteger.valueOf(55)), new Uint(BigInteger.valueOf(7)))));
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().encodeFunctionCalling());
+    public void trc20Encode() {
+        Function trc20Transfer = new Function("transfer",
+            Arrays.asList(
+                new Address("TV3KSjZHF4o6bC92SMrjhNJ3RE65xHNDuo"),
+                new Uint256(BigInteger.valueOf(1000).multiply(BigInteger.valueOf(10).pow(18)))
+            ),
+            Arrays.asList(new TypeReference<Bool>() {}));
 
-        new App().decodeFunctionReturn();
+        String encodedHex = FunctionEncoder.encode(trc20Transfer);
+        System.out.println("! encoding a TRC20 transfer");
+        System.out.println(encodedHex);
+    }
+
+    public static void main(String[] args) {
+        App app = new App();
+        System.out.println(app.encodeFunctionCalling());
+
+        app.decodeFunctionReturn();
+        app.trc20Encode();
     }
 }
