@@ -15,7 +15,7 @@ import java.util.*;
 
 public class App {
     public String encodeFunctionCalling() {
-        System.out.println("! fcuntion sam(bytes _, bool _, address _, uint[])");
+        System.out.println("! function sam(bytes _, bool _, address _, uint[])");
         Function function = new Function("sam",
             Arrays.asList(
                 new DynamicBytes("dave".getBytes()),
