@@ -2,7 +2,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.5'
 }
 
-description 'Ethereum Application Binary Interface (ABI) for working with smart contracts'
+description 'TRON Application Binary Interface (ABI) for working with smart contracts'
 
 dependencies {
     implementation project(':utils')
@@ -31,7 +31,7 @@ bintray {
         repo = 'tronj'
         name = 'abi'
         // configurations = ['archives']
-        desc = 'An Tron library.'
+        desc = description
         websiteUrl = 'https://github.com/ki5fpl/tronj'
         vcsUrl = 'https://github.com/ki5fpl/tronj.git'
         licenses = ['Apache-2.0']
