@@ -4,7 +4,11 @@ plugins {
 
 description 'Minimal set of tronj utility classes'
 
-dependencies { implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion" }
+dependencies {
+    implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"
+    implementation 'org.apache.tuweni:tuweni-bytes:1.0.0'
+    implementation 'org.apache.tuweni:tuweni-units:1.0.0'
+}
 
 bintray {
     user = System.getenv('BINTRAY_USER')
