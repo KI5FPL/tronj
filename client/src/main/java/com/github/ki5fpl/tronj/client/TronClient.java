@@ -39,6 +39,13 @@ public class TronClient {
         return new TronClient("https://api.shasta.trongrid.io", hexPrivateKey);
     }
 
+    public Transaction signTransaction(TransactionExtention txnExt) {
+        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), keyPair);
+        Transaction signedTxn =
+            txnExt.getTransaction().toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
+        return signedTxn;
+    }
+
     public void transfer(String from, String to, long amount) throws Exception {
         System.out.println("Transfer from: " + from);
         System.out.println("Transfer to: " + from);
@@ -56,10 +63,7 @@ public class TronClient {
         TransactionExtention txnExt = blockingStub.createTransaction2(req);
         System.out.println("txn id => " + Hex.toHexString(txnExt.getTxid().toByteArray()));
 
-        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), keyPair);
-        System.out.println("signature => " + Hex.toHexString(sig.encodedBytes().toArray()));
-        Transaction signedTxn =
-            txnExt.getTransaction().toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
+        Transaction signedTxn = signTransaction(txnExt);
 
         System.out.println(signedTxn.toString());
         Return ret = blockingStub.broadcastTransaction(signedTxn);
