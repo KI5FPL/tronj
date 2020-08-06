@@ -2,3 +2,4 @@ rootProject.name = 'tronj'
 
 include 'utils'
 include 'abi'
+include 'client'
