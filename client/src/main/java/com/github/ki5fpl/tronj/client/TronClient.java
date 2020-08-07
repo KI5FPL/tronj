@@ -9,6 +9,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import java.util.concurrent.TimeUnit;
 import org.apache.tuweni.bytes.Bytes32;
+import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.util.encoders.Hex;
 import org.tron.api.GrpcAPI.Return;
 import org.tron.api.GrpcAPI.TransactionExtention;
@@ -31,18 +32,31 @@ public class TronClient {
         keyPair = SECP256K1.KeyPair.create(SECP256K1.PrivateKey.create(Bytes32.fromHexString(hexPrivateKey)));
     }
 
-    public static TronClient forMainnet(String hexPrivateKey) {
-        return new TronClient("https://api.trongrid.io", hexPrivateKey);
+    public static TronClient ofMainnet(String hexPrivateKey) {
+        return new TronClient("grpc.trongrid.io:50051", hexPrivateKey);
     }
 
-    public static TronClient forShasta(String hexPrivateKey) {
-        return new TronClient("https://api.shasta.trongrid.io", hexPrivateKey);
+    public static TronClient ofShasta(String hexPrivateKey) {
+        return new TronClient("grpc.shasta.trongrid.io:50051", hexPrivateKey);
+    }
+
+    public static TronClient ofNile(String hexPrivateKey) {
+        return new TronClient("47.252.19.181:50051", hexPrivateKey);
     }
 
     public Transaction signTransaction(TransactionExtention txnExt) {
         SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), keyPair);
         Transaction signedTxn =
             txnExt.getTransaction().toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
+        return signedTxn;
+    }
+
+    public Transaction signTransaction(Transaction txn) {
+        SHA256.Digest digest = new SHA256.Digest();
+        digest.update(txn.getRawData().toByteArray());
+        byte[] txid = digest.digest();
+        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txid), keyPair);
+        Transaction signedTxn = txn.toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
         return signedTxn;
     }
 
