@@ -9,6 +9,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import java.util.concurrent.TimeUnit;
 import org.apache.tuweni.bytes.Bytes32;
+import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.util.encoders.Hex;
 import org.tron.api.GrpcAPI.Return;
@@ -42,6 +43,26 @@ public class TronClient {
 
     public static TronClient ofNile(String hexPrivateKey) {
         return new TronClient("47.252.19.181:50051", hexPrivateKey);
+    }
+
+    public static String generateAddress() {
+        // generate random address
+        SECP256K1.KeyPair kp = SECP256K1.KeyPair.generate();
+
+        SECP256K1.PublicKey pubKey = kp.getPublicKey();
+        Keccak.Digest256 digest = new Keccak.Digest256();
+        digest.update(pubKey.getEncoded(), 0, 64);
+        byte[] raw = digest.digest();
+        byte[] rawAddr = new byte[21];
+        rawAddr[0] = 0x41;
+        System.arraycopy(raw, 12, rawAddr, 1, 20);
+
+        System.out.println("Base58Check: " + Base58Check.bytesToBase58(rawAddr));
+        System.out.println("Hex Address: " + Hex.toHexString(rawAddr));
+        System.out.println("Public Key:  " + Hex.toHexString(pubKey.getEncoded()));
+        System.out.println("Private Key: " + Hex.toHexString(kp.getPrivateKey().getEncoded()));
+
+        return Hex.toHexString(kp.getPrivateKey().getEncoded());
     }
 
     public Transaction signTransaction(TransactionExtention txnExt) {

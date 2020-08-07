@@ -21,4 +21,9 @@ public class ClientTest {
         System.out.println(block.getBlockHeader());
         assertTrue(block.getBlockHeader().getRawDataOrBuilder().getNumber() > 0);
     }
+
+    @Test
+    public void testGenerateAddress() {
+        TronClient.generateAddress();
+    }
 }
