@@ -22,7 +22,7 @@ Then add `abi` as dependency.
 dependencies {
     ....
 
-    implementation 'com.github.ki5fpl.tronj:abi:0.1.1'
+    implementation 'com.github.ki5fpl.tronj:abi:0.2.0'
 
     ....
 }
@@ -36,7 +36,7 @@ Use maven repo setting from [Bintray](https://bintray.com/repo/downloadMavenRepo
 <dependency>
   <groupId>com.github.ki5fpl.tronj</groupId>
   <artifactId>abi</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
   <type>pom</type>
 </dependency>
 ```
