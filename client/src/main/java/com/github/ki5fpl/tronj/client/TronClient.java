@@ -86,6 +86,14 @@ public class TronClient {
         return ByteString.copyFrom(raw);
     }
 
+    public static String toHex(byte[] raw) {
+        return Hex.toHexString(raw);
+    }
+
+    public static String toHex(ByteString raw) {
+        return Hex.toHexString(raw.toByteArray());
+    }
+
     public Transaction signTransaction(TransactionExtention txnExt, SECP256K1.KeyPair kp) {
         SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), kp);
         Transaction signedTxn =
