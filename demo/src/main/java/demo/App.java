@@ -61,10 +61,24 @@ public class App {
         System.out.println(encodedHex);
     }
 
+    public void sendTrx() {
+        System.out.println("============= TRC transfer =============");
+        TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
+        try {
+            client.transfer("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8", "TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA", 2_000_000);
+        } catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+    }
+
     public void sendTrc20Transaction() {
+        System.out.println("============ TRC20 transfer =============");
+        // Any of `ofShasta`, `ofMainnet`.
         TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
 
-        // transfer(address,uint256) returns (bool)
+        // transfer(address _to,uint256 _amount) returns (bool)
+        // _to = TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA
+        // _amount = 10 * 10^18
         Function trc20Transfer = new Function("transfer",
             Arrays.asList(new Address("TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA"),
                 new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
@@ -96,6 +110,7 @@ public class App {
 
         app.decodeFunctionReturn();
         app.trc20Encode();
+        app.sendTrx();
         app.sendTrc20Transaction();
     }
 }
