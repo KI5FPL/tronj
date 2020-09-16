@@ -1,6 +1,11 @@
 package com.github.ki5fpl.tronj.client;
 
+import com.github.ki5fpl.tronj.api.WalletGrpc;
 import com.github.ki5fpl.tronj.crypto.SECP256K1;
+import com.github.ki5fpl.tronj.proto.Chain.Transaction;
+import com.github.ki5fpl.tronj.proto.Contract.TransferContract;
+import com.github.ki5fpl.tronj.proto.Response.TransactionExtention;
+import com.github.ki5fpl.tronj.proto.Response.TransactionReturn;
 import com.github.ki5fpl.tronj.utils.Base58Check;
 import com.google.protobuf.ByteString;
 import io.grpc.Channel;
@@ -12,11 +17,6 @@ import org.apache.tuweni.bytes.Bytes32;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.util.encoders.Hex;
-import org.tron.api.GrpcAPI.Return;
-import org.tron.api.GrpcAPI.TransactionExtention;
-import org.tron.api.WalletGrpc;
-import org.tron.protos.Protocol.Transaction;
-import org.tron.protos.contract.BalanceContract.TransferContract;
 
 public class TronClient {
     public final WalletGrpc.WalletBlockingStub blockingStub;
@@ -101,7 +101,7 @@ public class TronClient {
         Transaction signedTxn = signTransaction(txnExt);
 
         System.out.println(signedTxn.toString());
-        Return ret = blockingStub.broadcastTransaction(signedTxn);
+        TransactionReturn ret = blockingStub.broadcastTransaction(signedTxn);
         System.out.println("======== Result ========\n" + ret.toString());
     }
 }
