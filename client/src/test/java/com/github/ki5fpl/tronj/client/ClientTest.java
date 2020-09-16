@@ -39,10 +39,6 @@ public class ClientTest {
     public void testSendTrc20Transaction() {
         TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
 
-        byte[] rawFrom = Base58Check.base58ToBytes("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8");
-        // JST of Nile testnet
-        byte[] rawContract = Base58Check.base58ToBytes("TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3");
-
         // transfer(address,uint256) returns (bool)
         Function trc20Transfer = new Function("transfer",
             Arrays.asList(new Address("TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA"),
@@ -50,13 +46,13 @@ public class ClientTest {
             Arrays.asList(new TypeReference<Bool>() {}));
 
         String encodedHex = FunctionEncoder.encode(trc20Transfer);
-        byte[] rawData = Hex.decode(encodedHex);
 
-        TriggerSmartContract trigger = TriggerSmartContract.newBuilder()
-                                           .setOwnerAddress(ByteString.copyFrom(rawFrom))
-                                           .setContractAddress(ByteString.copyFrom(rawContract))
-                                           .setData(ByteString.copyFrom(rawData))
-                                           .build();
+        TriggerSmartContract trigger =
+            TriggerSmartContract.newBuilder()
+                .setOwnerAddress(TronClient.parseAddress("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8"))
+                .setContractAddress(TronClient.parseAddress("TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3"))
+                .setData(TronClient.parseHex(encodedHex))
+                .build();
 
         System.out.println("trigger:\n" + trigger);
 

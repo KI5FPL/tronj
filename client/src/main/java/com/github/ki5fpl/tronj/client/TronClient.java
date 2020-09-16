@@ -66,20 +66,48 @@ public class TronClient {
         return Hex.toHexString(kp.getPrivateKey().getEncoded());
     }
 
-    public Transaction signTransaction(TransactionExtention txnExt) {
-        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), keyPair);
+    public static ByteString parseAddress(String address) {
+        if (address.startsWith("T")) {
+            byte[] raw = Base58Check.base58ToBytes(address);
+            return ByteString.copyFrom(raw);
+        } else if (address.startsWith("41")) {
+            byte[] raw = Hex.decode(address);
+            return ByteString.copyFrom(raw);
+        } else if (address.startsWith("0x")) {
+            byte[] raw = Hex.decode(address.substring(2));
+            return ByteString.copyFrom(raw);
+        } else {
+            throw new IllegalArgumentException("Invalid address: " + address);
+        }
+    }
+
+    public static ByteString parseHex(String hexString) {
+        byte[] raw = Hex.decode(hexString);
+        return ByteString.copyFrom(raw);
+    }
+
+    public Transaction signTransaction(TransactionExtention txnExt, SECP256K1.KeyPair kp) {
+        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), kp);
         Transaction signedTxn =
             txnExt.getTransaction().toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
         return signedTxn;
     }
 
-    public Transaction signTransaction(Transaction txn) {
+    public Transaction signTransaction(Transaction txn, SECP256K1.KeyPair kp) {
         SHA256.Digest digest = new SHA256.Digest();
         digest.update(txn.getRawData().toByteArray());
         byte[] txid = digest.digest();
-        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txid), keyPair);
+        SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txid), kp);
         Transaction signedTxn = txn.toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
         return signedTxn;
+    }
+
+    public Transaction signTransaction(TransactionExtention txnExt) {
+        return signTransaction(txnExt, keyPair);
+    }
+
+    public Transaction signTransaction(Transaction txn) {
+        return signTransaction(txn, keyPair);
     }
 
     public void transfer(String from, String to, long amount) throws Exception {
