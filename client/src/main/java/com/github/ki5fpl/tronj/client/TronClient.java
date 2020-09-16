@@ -3,6 +3,7 @@ package com.github.ki5fpl.tronj.client;
 import com.github.ki5fpl.tronj.api.WalletGrpc;
 import com.github.ki5fpl.tronj.crypto.SECP256K1;
 import com.github.ki5fpl.tronj.proto.Chain.Transaction;
+import com.github.ki5fpl.tronj.proto.Contract.TransferAssetContract;
 import com.github.ki5fpl.tronj.proto.Contract.TransferContract;
 import com.github.ki5fpl.tronj.proto.Response.TransactionExtention;
 import com.github.ki5fpl.tronj.proto.Response.TransactionReturn;
@@ -96,6 +97,33 @@ public class TronClient {
         System.out.println("transfer => " + req.toString());
 
         TransactionExtention txnExt = blockingStub.createTransaction2(req);
+        System.out.println("txn id => " + Hex.toHexString(txnExt.getTxid().toByteArray()));
+
+        Transaction signedTxn = signTransaction(txnExt);
+
+        System.out.println(signedTxn.toString());
+        TransactionReturn ret = blockingStub.broadcastTransaction(signedTxn);
+        System.out.println("======== Result ========\n" + ret.toString());
+    }
+
+    public void transferTrc10(String from, String to, int tokenId, long amount) throws Exception {
+        System.out.println("Transfer from: " + from);
+        System.out.println("Transfer to: " + from);
+        System.out.println("Token id: " + tokenId);
+
+        byte[] rawFrom = Base58Check.base58ToBytes(from);
+        byte[] rawTo = Base58Check.base58ToBytes(to);
+        byte[] rawTokenId = Integer.toString(tokenId).getBytes();
+
+        TransferAssetContract req = TransferAssetContract.newBuilder()
+                                        .setOwnerAddress(ByteString.copyFrom(rawFrom))
+                                        .setToAddress(ByteString.copyFrom(rawTo))
+                                        .setAssetName(ByteString.copyFrom(rawTokenId))
+                                        .setAmount(amount)
+                                        .build();
+        System.out.println("transfer TRC10 => " + req.toString());
+
+        TransactionExtention txnExt = blockingStub.transferAsset2(req);
         System.out.println("txn id => " + Hex.toHexString(txnExt.getTxid().toByteArray()));
 
         Transaction signedTxn = signTransaction(txnExt);
