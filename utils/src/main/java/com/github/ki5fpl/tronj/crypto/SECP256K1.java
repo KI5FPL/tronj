@@ -538,8 +538,6 @@ public class SECP256K1 {
         private final BigInteger r;
         private final BigInteger s;
 
-        private final Supplier<Bytes> encoded = Suppliers.memoize(this::_encodedBytes);
-
         Signature(final BigInteger r, final BigInteger s, final byte recId) {
             this.r = r;
             this.s = s;
@@ -590,10 +588,6 @@ public class SECP256K1 {
         }
 
         public Bytes encodedBytes() {
-            return encoded.get();
-        }
-
-        private Bytes _encodedBytes() {
             final MutableBytes bytes = MutableBytes.create(BYTES_REQUIRED);
             UInt256.valueOf(r).toBytes().copyTo(bytes, 0);
             UInt256.valueOf(s).toBytes().copyTo(bytes, 32);
