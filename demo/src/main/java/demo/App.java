@@ -97,7 +97,11 @@ public class App {
         TransactionExtention txnExt = client.blockingStub.triggerContract(trigger);
         System.out.println("txn id => " + TronClient.toHex(txnExt.getTxid().toByteArray()));
 
-        Transaction signedTxn = client.signTransaction(txnExt);
+        Transaction unsignedTxn = Transaction.newBuilder()
+            .setRawData(txnExt.getTransaction().getRawData().toBuilder().setFeeLimit(10000000L))
+            .build();
+
+        Transaction signedTxn = client.signTransaction(unsignedTxn);
 
         System.out.println(signedTxn.toString());
         TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
