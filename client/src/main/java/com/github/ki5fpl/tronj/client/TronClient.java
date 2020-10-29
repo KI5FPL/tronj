@@ -168,4 +168,39 @@ public class TronClient {
         TransactionReturn ret = blockingStub.broadcastTransaction(signedTxn);
         System.out.println("======== Result ========\n" + ret.toString());
     }
+
+    public void transferTrc20(String fromAddr, String dstAddr, String cntrAddr, long feeLimit) {
+        System.out.println("============ TRC20 transfer =============");
+
+        // transfer(address _to,uint256 _amount) returns (bool)
+        // _to = TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA
+        // _amount = 10 * 10^18
+        Function trc20Transfer = new Function("transfer",
+            Arrays.asList(new Address(dstAddr),
+                new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
+            Arrays.asList(new TypeReference<Bool>() {}));
+
+        String encodedHex = FunctionEncoder.encode(trc20Transfer);
+        TriggerSmartContract trigger =
+            TriggerSmartContract.newBuilder()
+                .setOwnerAddress(TronClient.parseAddress(fromAddr))
+                .setContractAddress(TronClient.parseAddress(cntrAddr)) // JST
+                .setData(TronClient.parseHex(encodedHex))
+                .build();
+
+        System.out.println("trigger:\n" + trigger);
+
+        TransactionExtention txnExt = client.blockingStub.triggerContract(trigger);
+        System.out.println("txn id => " + TronClient.toHex(txnExt.getTxid().toByteArray()));
+
+        Transaction unsignedTxn = txnExt.getTransaction.toBuilder()
+            .setRawData(txnExt.getTransaction().getRawData().toBuilder().setFeeLimit(feeLimit))
+            .build();
+
+        Transaction signedTxn = client.signTransaction(unsignedTxn);
+
+        System.out.println(signedTxn.toString());
+        TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
+        System.out.println("======== Result ========\n" + ret.toString());
+    }
 }

@@ -71,42 +71,54 @@ public class App {
         }
     }
 
-    public void sendTrc20Transaction() {
-        System.out.println("============ TRC20 transfer =============");
+    // public void sendTrc20Transaction() {
+    //     System.out.println("============ TRC20 transfer =============");
+    //     // Any of `ofShasta`, `ofMainnet`.
+    //     TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
+
+    //     // transfer(address _to,uint256 _amount) returns (bool)
+    //     // _to = TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA
+    //     // _amount = 10 * 10^18
+    //     Function trc20Transfer = new Function("transfer",
+    //         Arrays.asList(new Address("TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA"),
+    //             new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
+    //         Arrays.asList(new TypeReference<Bool>() {}));
+
+    //     String encodedHex = FunctionEncoder.encode(trc20Transfer);
+    //     TriggerSmartContract trigger =
+    //         TriggerSmartContract.newBuilder()
+    //             .setOwnerAddress(TronClient.parseAddress("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8"))
+    //             .setContractAddress(TronClient.parseAddress("TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3")) // JST
+    //             .setData(TronClient.parseHex(encodedHex))
+    //             .build();
+
+    //     System.out.println("trigger:\n" + trigger);
+
+    //     TransactionExtention txnExt = client.blockingStub.triggerContract(trigger);
+    //     System.out.println("txn id => " + TronClient.toHex(txnExt.getTxid().toByteArray()));
+
+    //     Transaction unsignedTxn = txnExt.getTransaction.toBuilder()
+    //         .setRawData(txnExt.getTransaction().getRawData().toBuilder().setFeeLimit(10000000L))
+    //         .build();
+
+    //     Transaction signedTxn = client.signTransaction(unsignedTxn);
+
+    //     System.out.println(signedTxn.toString());
+    //     TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
+    //     System.out.println("======== Result ========\n" + ret.toString());
+    // }
+
+    public void transferTrc20() {
         // Any of `ofShasta`, `ofMainnet`.
         TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
-
-        // transfer(address _to,uint256 _amount) returns (bool)
-        // _to = TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA
-        // _amount = 10 * 10^18
-        Function trc20Transfer = new Function("transfer",
-            Arrays.asList(new Address("TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA"),
-                new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
-            Arrays.asList(new TypeReference<Bool>() {}));
-
-        String encodedHex = FunctionEncoder.encode(trc20Transfer);
-        TriggerSmartContract trigger =
-            TriggerSmartContract.newBuilder()
-                .setOwnerAddress(TronClient.parseAddress("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8"))
-                .setContractAddress(TronClient.parseAddress("TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3")) // JST
-                .setData(TronClient.parseHex(encodedHex))
-                .build();
-
-        System.out.println("trigger:\n" + trigger);
-
-        TransactionExtention txnExt = client.blockingStub.triggerContract(trigger);
-        System.out.println("txn id => " + TronClient.toHex(txnExt.getTxid().toByteArray()));
-
-        Transaction unsignedTxn = txnExt.getTransaction.toBuilder()
-            .setRawData(txnExt.getTransaction().getRawData().toBuilder().setFeeLimit(10000000L))
-            .build();
-
-        Transaction signedTxn = client.signTransaction(unsignedTxn);
-
-        System.out.println(signedTxn.toString());
-        TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
-        System.out.println("======== Result ========\n" + ret.toString());
+        try {
+            //JST transfer
+            client.transferTrc20("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8", "TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA", "TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3", 10000000L);
+        } catch Exception(e) {
+            System.out.println("error: " + e);
+        }
     }
+
 
     public static void main(String[] args) {
         App app = new App();
@@ -115,6 +127,7 @@ public class App {
         app.decodeFunctionReturn();
         app.trc20Encode();
         app.sendTrx();
-        app.sendTrc20Transaction();
+        // app.sendTrc20Transaction();
+        app.transferTrc20();
     }
 }
