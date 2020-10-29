@@ -1,10 +1,15 @@
 package com.github.ki5fpl.tronj.client;
 
+import com.github.ki5fpl.tronj.abi.FunctionEncoder;
+import com.github.ki5fpl.tronj.abi.TypeReference;
+import com.github.ki5fpl.tronj.abi.datatypes.*;
+import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint256;
 import com.github.ki5fpl.tronj.api.WalletGrpc;
 import com.github.ki5fpl.tronj.crypto.SECP256K1;
 import com.github.ki5fpl.tronj.proto.Chain.Transaction;
 import com.github.ki5fpl.tronj.proto.Contract.TransferAssetContract;
 import com.github.ki5fpl.tronj.proto.Contract.TransferContract;
+import com.github.ki5fpl.tronj.proto.Contract.TriggerSmartContract;
 import com.github.ki5fpl.tronj.proto.Response.TransactionExtention;
 import com.github.ki5fpl.tronj.proto.Response.TransactionReturn;
 import com.github.ki5fpl.tronj.utils.Base58Check;
@@ -18,6 +23,8 @@ import org.apache.tuweni.bytes.Bytes32;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.util.encoders.Hex;
+import java.math.BigInteger;
+import java.util.*;
 
 public class TronClient {
     public final WalletGrpc.WalletBlockingStub blockingStub;
@@ -169,38 +176,38 @@ public class TronClient {
         System.out.println("======== Result ========\n" + ret.toString());
     }
 
-    public void transferTrc20(String fromAddr, String dstAddr, String cntrAddr, long feeLimit) {
+    public void transferTrc20(String from, String to, String cntr, long feeLimit, long amount) throws Exception {
         System.out.println("============ TRC20 transfer =============");
 
         // transfer(address _to,uint256 _amount) returns (bool)
         // _to = TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA
         // _amount = 10 * 10^18
         Function trc20Transfer = new Function("transfer",
-            Arrays.asList(new Address(dstAddr),
+            Arrays.asList(new Address(to),
                 new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
             Arrays.asList(new TypeReference<Bool>() {}));
 
         String encodedHex = FunctionEncoder.encode(trc20Transfer);
         TriggerSmartContract trigger =
             TriggerSmartContract.newBuilder()
-                .setOwnerAddress(TronClient.parseAddress(fromAddr))
-                .setContractAddress(TronClient.parseAddress(cntrAddr)) // JST
+                .setOwnerAddress(TronClient.parseAddress(from))
+                .setContractAddress(TronClient.parseAddress(cntr)) // JST
                 .setData(TronClient.parseHex(encodedHex))
                 .build();
 
         System.out.println("trigger:\n" + trigger);
 
-        TransactionExtention txnExt = client.blockingStub.triggerContract(trigger);
+        TransactionExtention txnExt = blockingStub.triggerContract(trigger);
         System.out.println("txn id => " + TronClient.toHex(txnExt.getTxid().toByteArray()));
 
-        Transaction unsignedTxn = txnExt.getTransaction.toBuilder()
+        Transaction unsignedTxn = txnExt.getTransaction().toBuilder()
             .setRawData(txnExt.getTransaction().getRawData().toBuilder().setFeeLimit(feeLimit))
             .build();
 
-        Transaction signedTxn = client.signTransaction(unsignedTxn);
+        Transaction signedTxn = signTransaction(unsignedTxn);
 
         System.out.println(signedTxn.toString());
-        TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
+        TransactionReturn ret = blockingStub.broadcastTransaction(signedTxn);
         System.out.println("======== Result ========\n" + ret.toString());
     }
 }
