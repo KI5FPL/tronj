@@ -110,7 +110,7 @@ public class App {
 
     public void transferTrc20() {
         // Any of `ofShasta`, `ofMainnet`.
-        TronClient client = TronClient.ofNile("7c3a547f37cf82c7bd7cead99e53fd9a7d3bf6a3c8bd3c8541ad572322d16e42");
+        TronClient client = TronClient.ofNile("3333333333333333333333333333333333333333333333333333333333333333");
         try {
             //JST transfer
             client.transferTrc20("TJRabPrwbZy45sbavfcjinPJC18kjpRTv8", "TVjsyZ7fYF3qLF6BQgPmTEZy1xrNNyVAAA", "TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3", 1000000000L, 10L, 18);
