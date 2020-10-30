@@ -176,7 +176,7 @@ public class TronClient {
         System.out.println("======== Result ========\n" + ret.toString());
     }
 
-    public void transferTrc20(String from, String to, String cntr, long feeLimit, long amount) throws Exception {
+    public void transferTrc20(String from, String to, String cntr, long feeLimit, long amount, int precision) throws Exception {
         System.out.println("============ TRC20 transfer =============");
 
         // transfer(address _to,uint256 _amount) returns (bool)
@@ -184,7 +184,7 @@ public class TronClient {
         // _amount = 10 * 10^18
         Function trc20Transfer = new Function("transfer",
             Arrays.asList(new Address(to),
-                new Uint256(BigInteger.valueOf(10).multiply(BigInteger.valueOf(10).pow(18)))),
+                new Uint256(BigInteger.valueOf(amount).multiply(BigInteger.valueOf(10).pow(precision)))),
             Arrays.asList(new TypeReference<Bool>() {}));
 
         String encodedHex = FunctionEncoder.encode(trc20Transfer);
