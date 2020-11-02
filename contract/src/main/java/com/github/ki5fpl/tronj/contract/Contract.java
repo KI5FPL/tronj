@@ -17,13 +17,14 @@ public class Contract {
     private ByteString trxHash;
     private TronClient client;
 
-    public Contract(String cntrAddr, ABI abi, ByteString bytecode, long userResourcePercent, String name, long originEnergyLimit) {
+    public Contract(String cntrAddr, ABI abi, ByteString bytecode, long userResourcePercent, String name, long originEnergyLimit, TronClient client) {
         this.cntrAddr = cntrAddr;
         this.abi = abi;
         this.bytecode = bytecode;
         this.userResourcePercent = userResourcePercent;
         this.name = name;
         this.originEnergyLimit = originEnergyLimit;
+        this.client = client;
     }
 
     public String getOriginAddr() {
@@ -104,5 +105,13 @@ public class Contract {
 
     public void setTrxHash(ByteString trxHash) {
         this.trxHash = trxHash;
+    }
+
+    public TronClient getClient() {
+        return client;
+    }
+
+    public void setClient(TronClient client) {
+        this.client = client;
     }
 }
