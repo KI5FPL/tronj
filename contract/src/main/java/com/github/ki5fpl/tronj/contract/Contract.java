@@ -5,16 +5,16 @@ import com.github.ki5fpl.tronj.client.TronClient;
 import com.google.protobuf.ByteString;
 
 public class Contract {
-    private String originAddr;
-    private String cntrAddr;
+    private String originAddr = "";
+    private String cntrAddr = "";
     private ABI abi;
     private ByteString bytecode;
-    private long callValue;
-    private long userResourcePercent;
+    private long callValue = 0;
+    private long userResourcePercent = 100;
     private String name;
-    private long originEnergyLimit;
-    private ByteString codeHash;
-    private ByteString trxHash;
+    private long originEnergyLimit = 1;
+    private ByteString codeHash = null;
+    private ByteString trxHash = null;
     private TronClient client;
 
     public Contract(String cntrAddr, ABI abi, ByteString bytecode, long userResourcePercent, String name, long originEnergyLimit, TronClient client) {
@@ -25,6 +25,18 @@ public class Contract {
         this.name = name;
         this.originEnergyLimit = originEnergyLimit;
         this.client = client;
+    }
+
+    public Contract(Builder builder) {
+        this.originAddr = builder.originAddr;
+        this.cntrAddr = builder.cntrAddr;
+        this.abi = builder.abi;
+        this.bytecode = builder.bytecode;
+        this.callValue = builder.callValue;
+        this.userResourcePercent = builder.userResourcePercent;
+        this.name = builder.name;
+        this.originEnergyLimit = builder.originEnergyLimit;
+        this.client = builder.client;
     }
 
     public String getOriginAddr() {
@@ -113,5 +125,69 @@ public class Contract {
 
     public void setClient(TronClient client) {
         this.client = client;
+    }
+
+    //contract builder
+    public static class Builder {
+        private String originAddr = "";
+        private String cntrAddr = "";
+        private ABI abi;
+        private ByteString bytecode;
+        private long callValue = 0;
+        private long userResourcePercent = 100;
+        private String name;
+        private long originEnergyLimit = 1;
+        private ByteString codeHash = null;
+        private ByteString trxHash = null;
+        private TronClient client;
+
+        public Builder setOriginAddr(String originAddr) {
+            this.originAddr = originAddr;
+            return this;
+        }
+
+        public Builder setCntrAddr(String cntrAddr) {
+            this.cntrAddr = cntrAddr;
+            return this;
+        }
+
+        public Builder setAbi(ABI abi) {
+            this.abi = abi;
+            return this;
+        }
+
+        public Builder setBytecode(ByteString bytecode) {
+            this.bytecode = bytecode;
+            return this;
+        }
+
+        public Builder setCallValue(long callValue) {
+            this.callValue = callValue;
+            return this;
+        }
+
+        public Builder setUserResourcePercent(long userResourcePercent) {
+            this.userResourcePercent = userResourcePercent;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setOriginEnergyLimit(long originEnergyLimit) {
+            this.originEnergyLimit = originEnergyLimit;
+            return this;
+        }
+
+        public Builder setClient(TronClient client) {
+            this.client = client;
+            return this;
+        }
+
+        public Builder build() {
+            return new Contract(this);
+        }
     }
 }
