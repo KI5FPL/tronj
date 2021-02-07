@@ -2,6 +2,8 @@
 
 The TRON client library.
 
+**NOTE: This project is adopted by TRON Foudation and moved to** https://github.com/tronprotocol/tronj .
+
 ## How to use
 
 ### Gradle Setting
