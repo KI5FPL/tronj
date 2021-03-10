@@ -34,6 +34,7 @@ public class App {
   }
 
   public void decodeFunctionReturn() {
+    // function test() returns (uint,address)
     Function function = new Function("test", Collections.<Type>emptyList(),
         Arrays.asList(new TypeReference<Uint>() {}, new TypeReference<Address>() {}));
 
