@@ -11,7 +11,7 @@ import com.github.ki5fpl.tronj.abi.datatypes.generated.Bytes10;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint256;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint32;
 import com.github.ki5fpl.tronj.client.TronClient;
-import com.github.ki5fpl.tronj.crypto.SECP256K1;
+import com.github.ki5fpl.tronj.key.KeyPair;
 import com.github.ki5fpl.tronj.proto.Chain.Transaction;
 import com.github.ki5fpl.tronj.proto.Contract.TriggerSmartContract;
 import com.github.ki5fpl.tronj.proto.Response.BlockExtention;
@@ -65,8 +65,7 @@ public class App {
 
   public void sendTrx() {
     System.out.println("============= TRX transfer =============");
-    SECP256K1.KeyPair kp =
-        TronClient.keyPairOfHex("3333333333333333333333333333333333333333333333333333333333333333");
+    KeyPair kp = KeyPair.of("3333333333333333333333333333333333333333333333333333333333333333");
     TronClient client = TronClient.ofNile();
     try {
       TransactionExtention txn = client.transfer(
@@ -81,8 +80,7 @@ public class App {
   public void sendTrc20Transaction() {
     System.out.println("============ TRC20 transfer =============");
     // Any of `ofShasta`, `ofMainnet`.
-    SECP256K1.KeyPair kp =
-        TronClient.keyPairOfHex("3333333333333333333333333333333333333333333333333333333333333333");
+    KeyPair kp = KeyPair.of("3333333333333333333333333333333333333333333333333333333333333333");
     TronClient client = TronClient.ofNile();
 
     // transfer(address _to,uint256 _amount) returns (bool)
@@ -124,5 +122,7 @@ public class App {
     app.trc20Encode();
     app.sendTrx();
     app.sendTrc20Transaction();
+
+    TronClient.generateAddress();
   }
 }

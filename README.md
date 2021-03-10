@@ -26,9 +26,8 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java:3.11.0'
     implementation 'io.grpc:grpc-stub:1.31.0'
     // tronj core libs
-    implementation 'com.github.ki5fpl.tronj:abi:0.5.0'
-    implementation 'com.github.ki5fpl.tronj:utils:0.5.0'
-    implementation 'com.github.ki5fpl.tronj:client:0.5.0'
+    implementation 'com.github.ki5fpl.tronj:abi:0.6.0'
+    implementation 'com.github.ki5fpl.tronj:client:0.6.0'
 
     ....
 }
