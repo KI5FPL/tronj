@@ -139,12 +139,14 @@ public class TronClient {
 
   public void broadcastTransaction(Transaction signedTxn) {
     TransactionReturn ret = blockingStub.broadcastTransaction(signedTxn);
-    System.out.println("======== Result ========\n" + ret.toString());
+    if (ret.getResult() != true) {
+      throw new RuntimeException(
+          String.format("%s: %s", ret.getCode(), ret.getMessage().toStringUtf8()));
+    }
   }
 
   public void broadcastTransaction(TransactionExtention signedTxnExt) {
-    TransactionReturn ret = blockingStub.broadcastTransaction(signedTxnExt.getTransaction());
-    System.out.println("======== Result ========\n" + ret.toString());
+    broadcastTransaction(signedTxnExt.getTransaction());
   }
 
   public static Transaction addMemoToTransaction(Transaction txn, String memo) {
@@ -172,6 +174,13 @@ public class TronClient {
     return ByteString.copyFrom(txid);
   }
 
+  private static void handleTransactionException(TransactionExtention txnExt) {
+    if (txnExt.getResult().getResult() != true) {
+      throw new IllegalArgumentException(String.format(
+          "%s: %s", txnExt.getResult().getCode(), txnExt.getResult().getMessage().toStringUtf8()));
+    }
+  }
+
   public TransactionExtention transfer(String from, String to, long amount, String memo) {
     TransactionExtention txnExt = transfer(from, to, amount);
     Transaction txnWithMemo = addMemoToTransaction(txnExt.getTransaction(), memo);
@@ -192,7 +201,7 @@ public class TronClient {
                                .build();
 
     TransactionExtention txnExt = blockingStub.createTransaction2(req);
-
+    handleTransactionException(txnExt);
     return txnExt;
   }
 
@@ -219,6 +228,7 @@ public class TronClient {
                                     .build();
 
     TransactionExtention txnExt = blockingStub.transferAsset2(req);
+    handleTransactionException(txnExt);
     return txnExt;
   }
 }
