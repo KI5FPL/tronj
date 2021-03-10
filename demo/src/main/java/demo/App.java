@@ -64,7 +64,7 @@ public class App {
   }
 
   public void sendTrx() {
-    System.out.println("============= TRC transfer =============");
+    System.out.println("============= TRX transfer =============");
     SECP256K1.KeyPair kp =
         TronClient.keyPairOfHex("3333333333333333333333333333333333333333333333333333333333333333");
     TronClient client = TronClient.ofNile();
