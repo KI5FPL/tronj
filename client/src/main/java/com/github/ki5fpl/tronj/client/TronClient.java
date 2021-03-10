@@ -2,6 +2,7 @@ package com.github.ki5fpl.tronj.client;
 
 import com.github.ki5fpl.tronj.api.WalletGrpc;
 import com.github.ki5fpl.tronj.crypto.SECP256K1;
+import com.github.ki5fpl.tronj.key.KeyPair;
 import com.github.ki5fpl.tronj.proto.Chain.Transaction;
 import com.github.ki5fpl.tronj.proto.Contract.TransferAssetContract;
 import com.github.ki5fpl.tronj.proto.Contract.TransferContract;
@@ -44,9 +45,8 @@ public class TronClient {
     return new TronClient("47.252.19.181:50051");
   }
 
-  public static SECP256K1.KeyPair keyPairOfHex(String hexPrivateKey) {
-    return SECP256K1.KeyPair.create(
-        SECP256K1.PrivateKey.create(Bytes32.fromHexString(hexPrivateKey)));
+  public static KeyPair keyPairOfHex(String hexPrivateKey) {
+    return KeyPair.of(hexPrivateKey);
   }
 
   public static String generateAddress() {
@@ -118,23 +118,12 @@ public class TronClient {
     return transactionIdOf(txnExt.getTransaction());
   }
 
-  public static Transaction signTransaction(TransactionExtention txnExt, SECP256K1.KeyPair kp) {
-    SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txnExt.getTxid().toByteArray()), kp);
-    Transaction signedTxn = txnExt.getTransaction()
-                                .toBuilder()
-                                .addSignature(ByteString.copyFrom(sig.encodedBytes().toArray()))
-                                .build();
-    return signedTxn;
+  public static Transaction signTransaction(TransactionExtention txnExt, KeyPair kp) {
+    return kp.sign(txnExt);
   }
 
-  public static Transaction signTransaction(Transaction txn, SECP256K1.KeyPair kp) {
-    SHA256.Digest digest = new SHA256.Digest();
-    digest.update(txn.getRawData().toByteArray());
-    byte[] txid = digest.digest();
-    SECP256K1.Signature sig = SECP256K1.sign(Bytes32.wrap(txid), kp);
-    Transaction signedTxn =
-        txn.toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
-    return signedTxn;
+  public static Transaction signTransaction(Transaction txn, KeyPair kp) {
+    return kp.sign(txn);
   }
 
   public void broadcastTransaction(Transaction signedTxn) {

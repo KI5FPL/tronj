@@ -11,7 +11,7 @@ import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint256;
 import com.github.ki5fpl.tronj.abi.datatypes.generated.Uint32;
 import com.github.ki5fpl.tronj.api.GrpcAPI.EmptyMessage;
 import com.github.ki5fpl.tronj.client.TronClient;
-import com.github.ki5fpl.tronj.crypto.SECP256K1;
+import com.github.ki5fpl.tronj.key.KeyPair;
 import com.github.ki5fpl.tronj.proto.Chain.Transaction;
 import com.github.ki5fpl.tronj.proto.Contract.TriggerSmartContract;
 import com.github.ki5fpl.tronj.proto.Response.BlockExtention;
@@ -38,8 +38,7 @@ public class ClientTest {
 
   @Test
   public void testTrxTransaction() {
-    SECP256K1.KeyPair kp =
-        TronClient.keyPairOfHex("3333333333333333333333333333333333333333333333333333333333333333");
+    KeyPair kp = KeyPair.of("3333333333333333333333333333333333333333333333333333333333333333");
     TronClient client = TronClient.ofNile();
 
     TransactionExtention txnExt =
@@ -56,8 +55,7 @@ public class ClientTest {
 
   @Test
   public void testSendTrc20Transaction() {
-    SECP256K1.KeyPair kp =
-        TronClient.keyPairOfHex("3333333333333333333333333333333333333333333333333333333333333333");
+    KeyPair kp = KeyPair.of("3333333333333333333333333333333333333333333333333333333333333333");
     TronClient client = TronClient.ofNile();
 
     // transfer(address,uint256) returns (bool)
@@ -82,7 +80,7 @@ public class ClientTest {
 
     System.out.println("txid:\n" + client.transactionIdOf(txnWithFeeLimit));
 
-    Transaction signedTxn = client.signTransaction(txnWithFeeLimit, kp);
+    Transaction signedTxn = kp.sign(txnWithFeeLimit);
 
     System.out.println(signedTxn.toString());
     TransactionReturn ret = client.blockingStub.broadcastTransaction(signedTxn);
